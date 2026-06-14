@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Video Downloader - Instagram & Pinterest</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f0f1a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: #1a1a2e;
+      border: 1px solid #2a2a4a;
+      border-radius: 20px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    /* ── Instagram + Pinterest Logo Pills ── */
+    .top-logos {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+    .logo-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .insta-pill {
+      background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      color: #fff;
+    }
+    .pint-pill {
+      background: #E60023;
+      color: #fff;
+    }
+    .pill-icon { width: 20px; height: 20px; flex-shrink: 0; }
+
+    /* ── Heading ── */
+    .emoji-head { text-align: center; font-size: 44px; margin-bottom: 8px; }
+    h1 { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+    .subtitle { text-align: center; font-size: 14px; color: #888; margin-bottom: 28px; }
+
+    /* ── Input & Button ── */
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid #2a2a4a;
+      background: #0f0f1a;
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 12px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input[type="text"]:focus { border-color: #6c63ff; }
+    input[type="text"]::placeholder { color: #555; }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      background: #6c63ff;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    button:hover { background: #574fd6; }
+    button:active { transform: scale(0.98); }
+    button:disabled { background: #444; cursor: not-allowed; }
+
+    /* ── Status ── */
+    #status { margin-top: 16px; font-size: 14px; min-height: 22px; text-align: center; }
+    .status-loading { color: #6c63ff; }
+    .status-success { color: #4caf50; }
+    .status-error   { color: #f44336; }
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid #6c63ff; border-top-color: transparent;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+      vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Notice Box ── */
+    .notice-box {
+      margin-top: 24px;
+      background: #1f1a10;
+      border: 1px solid #4a3800;
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .notice-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f5c518;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .notice-list { list-style: none; padding: 0; }
+    .notice-list li {
+      font-size: 12.5px;
+      color: #aaa;
+      padding: 4px 0 4px 16px;
+      position: relative;
+      line-height: 1.55;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .notice-list li:last-child { border-bottom: none; }
+    .notice-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #f5c518;
+      font-size: 14px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #444;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Instagram & Pinterest Logo Pills -->
+  <div class="top-logos">
+    <div class="logo-pill insta-pill">
+      <!-- Instagram SVG Logo -->
+      <svg class="pill-icon" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+      </svg>
+      Instagram
+    </div>
+    <div class="logo-pill pint-pill">
+      <!-- Pinterest SVG Logo -->
+      <svg class="pill-icon" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+      </svg>
+      Pinterest
+    </div>
+  </div>
+
+  <div class="emoji-head">⬇️</div>
+  <h1>Video Downloader</h1>
+  <p class="subtitle">Instagram Reels ya Pinterest video ka link paste karo</p>
+
+  <input type="text" id="urlInput" placeholder="Yahan link paste karo..." />
+  <button id="downloadBtn" onclick="startDownload()">⬇️ Download Video</button>
+
+  <div id="status"></div>
+
+  <!-- Notice Box -->
+  <div class="notice-box">
+    <div class="notice-title">⚠️ Zaroori Suchna (Important Notice)</div>
+    <ul class="notice-list">
+      <li>Yeh tool sirf <strong>personal use</strong> ke liye banaya gaya hai</li>
+      <li>Kisi bhi video ko bina permission ke share karna <strong>galat hai</strong></li>
+      <li>Instagram aur Pinterest ki Terms of Service ka dhyan rakhen</li>
+      <li>Copyright content download karna aapki khud ki zimmedari hai</li>
+      <li>Is tool ka <strong>commercial use bilkul mana hai</strong></li>
+      <li>Private accounts ki videos download karne ki koshish na karen</li>
+    </ul>
+  </div>
+
+  <p class="footer">© 2026 Video Downloader · Personal Use Only · Sirf Niji Upyog Ke Liye</p>
+</div>
+
+<script>
+  async function startDownload() {
+    const url = document.getElementById("urlInput").value.trim();
+    const status = document.getElementById("status");
+    const btn = document.getElementById("downloadBtn");
+
+    if (!url) {
+      status.className = "status-error";
+      status.innerHTML = "⚠️ Pehle ek video link paste karo!";
+      return;
+    }
+
+    btn.disabled = true;
+    status.className = "status-loading";
+    status.innerHTML = '<span class="spinner"></span> Download ho raha hai, thoda ruko...';
+
+    try {
+      const response = await fetch("/download", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: url })
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Download fail ho gaya");
+      }
+
+      const blob = await response.blob();
+      const disposition = response.headers.get("Content-Disposition");
+      let filename = "video.mp4";
+      if (disposition && disposition.includes("filename=")) {
+        filename = disposition.split("filename=")[1].replace(/"/g, "").trim();
+      }
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+
+      status.className = "status-success";
+      status.innerHTML = "✅ Download shuru ho gaya! Downloads folder check karo.";
+
+    } catch (err) {
+      status.className = "status-error";
+      status.innerHTML = "❌ Error: " + err.message;
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  document.getElementById("urlInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") startDownload();
+  });
+</script>
+</body>
+</html>
